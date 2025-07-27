@@ -1,21 +1,18 @@
+let lastStock = null; // Disimpan di memory
+
 export default function handler(req, res) {
   if (req.method === 'POST') {
-    // Ambil data dari body
-    const stockData = req.body;
+    lastStock = req.body;
+    return res.status(200).json({ message: 'Stock updated', received: lastStock });
+  }
 
-    console.log('Diterima dari Roblox:', stockData);
-
-    // Simpan, proses, atau sekadar balas
-    return res.status(200).json({
-      message: 'Berhasil menerima data dari Roblox!',
-      received: stockData
+  if (req.method === 'GET') {
+    return res.status(200).json(lastStock || {
+      Coconut: 5,
+      Apple: 2,
+      Pinecone: 7
     });
   }
 
-  // Default untuk GET
-  res.status(200).json({
-    Coconut: 5,
-    Apple: 2,
-    Pinecone: 7
-  });
+  res.status(405).json({ error: 'Method not allowed' });
 }
